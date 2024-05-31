@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  openai_service:
+    build:
+      context: ./code
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./code:/code
+    environment:
+      - JUPYTER_TOKEN=your_token_here # Set a token for accessing Jupyter Notebook
