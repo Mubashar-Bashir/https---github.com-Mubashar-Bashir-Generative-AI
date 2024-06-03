@@ -1,10 +1,10 @@
 version: "3.9"
 
-name: Mobi-ai-mart
+name: mobi-ai-mart
 
 services:
-# service 01 user_service_api
-user-svc-aimart-api:
+  # Service 01 user_service_api
+  user-svc-aimart-api:
     build:
       context: ./user-service-aimart
       dockerfile: Dockerfile.dev
@@ -16,8 +16,8 @@ user-svc-aimart-api:
     ports:
       - "8006:8006"
 
-# service 02 product_service_api
-prod-svc-aimart-api:
+  # Service 02 product_service_api
+  prod-svc-aimart-api:
     build:
       context: ./product-service-aimart
       dockerfile: Dockerfile.dev
@@ -29,8 +29,8 @@ prod-svc-aimart-api:
     ports:
       - "8007:8007"
 
-# service 03 payment_svc_api
-payment-svc-api:
+  # Service 03 payment_svc_api
+  payment-svc-api:
     build:
       context: ./payment-service-aimart
       dockerfile: Dockerfile.dev
@@ -42,8 +42,8 @@ payment-svc-api:
     ports:
       - "8008:8008"
 
-# service 04 order_service_api
-order-svc-api:
+  # Service 04 order_service_api
+  order-svc-api:
     build:
       context: ./order-service-aimart
       dockerfile: Dockerfile.dev
@@ -55,8 +55,8 @@ order-svc-api:
     ports:
       - "8009:8009"
 
-# service 05 notification_service_api
-notification-svc-api:
+  # Service 05 notification_service_api
+  notification-svc-api:
     build:
       context: ./notification-service-aimart
       dockerfile: Dockerfile.dev
@@ -68,22 +68,22 @@ notification-svc-api:
     ports:
       - "8010:8010"
 
-# service 06 inventory_service_api
-inventory-svc-api:
+  # Service 06 inventory_service_api
+  inventory-svc-api:
     build:
       context: ./inventory-service-aimart
       dockerfile: Dockerfile.dev
     container_name: inventory-svc-api-cont
     volumes:
       - ./inventory-service-aimart:/code
-      
     depends_on:
       - inventory-svc-db
     ports:
       - "8011:8011"
-########################################Database services###################################
-# service 07 db for user_service
-user-aimart-db:
+
+  ######################################## Database services ###################################
+  # Service 07 db for user_service
+  user-aimart-db:
     image: postgres:latest
     restart: always
     container_name: user-aimart_db_Cont
@@ -94,10 +94,10 @@ user-aimart-db:
     ports:
       - '5406:5432'
     volumes:
-      - user-aimart_db:/var/lib/postgresql/data
+      - user-aimart-db:/var/lib/postgresql/data
 
-# service 08 db for product_service
-prod-svc-db:
+  # Service 08 db for product_service
+  prod-svc-db:
     image: postgres:latest
     restart: always
     container_name: prod-svc-Cont
@@ -110,8 +110,8 @@ prod-svc-db:
     volumes:
       - prod-svc-db:/var/lib/postgresql/data
 
-# service 09 db for payment_service
-payment-svc-db:
+  # Service 09 db for payment_service
+  payment-svc-db:
     image: postgres:latest
     restart: always
     container_name: payment-svc-db-Cont
@@ -124,8 +124,8 @@ payment-svc-db:
     volumes:
       - payment-svc-db:/var/lib/postgresql/data
 
-# service 10 db for order_service
-order-svc-db:
+  # Service 10 db for order_service
+  order-svc-db:
     image: postgres:latest
     restart: always
     container_name: order-svc-db-Cont
@@ -138,8 +138,8 @@ order-svc-db:
     volumes:
       - order-svc-db:/var/lib/postgresql/data
 
-# service 11 db for notification_service
-notification-svc-db:
+  # Service 11 db for notification_service
+  notification-svc-db:
     image: postgres:latest
     restart: always
     container_name: notification-svc-db-Cont
@@ -152,8 +152,8 @@ notification-svc-db:
     volumes:
       - notification-svc-db:/var/lib/postgresql/data
 
-# service 12 db for inventory_service
-inventory-svc-db:
+  # Service 12 db for inventory_service
+  inventory-svc-db:
     image: postgres:latest
     restart: always
     container_name: inventory-svc-db-Cont
@@ -166,8 +166,8 @@ inventory-svc-db:
     volumes:
       - inventory-svc-db:/var/lib/postgresql/data
 
-# service 13 broker for apache kafka
-broker:
+  # Service 13 broker for apache kafka
+  broker:
     image: apache/kafka:3.7.0
     hostname: ai_mart_broker
     container_name: ai_mart_broker
@@ -189,8 +189,8 @@ broker:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
 
-# service 14 kafka-ui
-kafka-ui:
+  # Service 14 kafka-ui
+  kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui-aimart-cont
     ports:
@@ -202,35 +202,31 @@ kafka-ui:
     depends_on:
       - broker
 
-
-
-################################################volumes###################################################
+################################################ Volumes ###################################################
 volumes:
-  # volume 01 for user db
+  # Volume 01 for user db
   user-aimart-db:
     driver: local
 
-  # volume 02 for product db
+  # Volume 02 for product db
   prod-svc-db:
     driver: local
 
-  # volume 03 for payment db
+  # Volume 03 for payment db
   payment-svc-db:
     driver: local
 
-  # volume 04 for order db
+  # Volume 04 for order db
   order-svc-db:
     driver: local
 
-  # volume 05 for notification db
+  # Volume 05 for notification db
   notification-svc-db:
     driver: local
 
-  # volume 06 for inventory db
+  # Volume 06 for inventory db
   inventory-svc-db:
     driver: local
-
-
 
 networks:
   default:
