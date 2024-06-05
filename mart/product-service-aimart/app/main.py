@@ -28,4 +28,4 @@ app = FastAPI(
 # Root endpoint
 @app.get("/")
 def read_root():
-    return {"Welcome": "welcome to my mobi product-service-aimart"}
+    return {"Welcome": "welcome to my mobi product-service-aimart local computer"}

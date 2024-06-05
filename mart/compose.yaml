@@ -1,4 +1,4 @@
-version: "3.9"
+
 
 name: mobi-ai-mart
 
@@ -71,11 +71,11 @@ services:
   # Service 06 inventory_service_api
   inventory-svc-api:
     build:
-      context: ./inventory-service-aimart
+      context: ./inventry-service-aimart
       dockerfile: Dockerfile.dev
     container_name: inventory-svc-api-cont
     volumes:
-      - ./inventory-service-aimart:/code
+      - ./inventry-service-aimart:/code
     depends_on:
       - inventory-svc-db
     ports:
@@ -88,9 +88,9 @@ services:
     restart: always
     container_name: user-aimart_db_Cont
     environment:
-      - POSTGRES_USER=khalidNawaz
+      - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=user_service_database
+      - POSTGRES_DB=user-aimart-db
     ports:
       - '5406:5432'
     volumes:
@@ -102,9 +102,9 @@ services:
     restart: always
     container_name: prod-svc-Cont
     environment:
-      - POSTGRES_USER=khalidNawaz
+      - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=product_service_database
+      - POSTGRES_DB=prod-svc-db
     ports:
       - '5407:5432'
     volumes:
@@ -116,9 +116,9 @@ services:
     restart: always
     container_name: payment-svc-db-Cont
     environment:
-      - POSTGRES_USER=khalidNawaz
+      - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=payment_service_database
+      - POSTGRES_DB=payment-svc-db
     ports:
       - '5408:5432'
     volumes:
@@ -130,9 +130,9 @@ services:
     restart: always
     container_name: order-svc-db-Cont
     environment:
-      - POSTGRES_USER=khalidNawaz
+      - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=order_service_database
+      - POSTGRES_DB= order-svc-db
     ports:
       - '5409:5432'
     volumes:
@@ -144,9 +144,9 @@ services:
     restart: always
     container_name: notification-svc-db-Cont
     environment:
-      - POSTGRES_USER=khalidNawaz
+      - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=notification_service_database
+      - POSTGRES_DB=notification-svc-db
     ports:
       - '5410:5432'
     volumes:
@@ -158,9 +158,9 @@ services:
     restart: always
     container_name: inventory-svc-db-Cont
     environment:
-      - POSTGRES_USER=khalidNawaz
+      - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=inventory_service_database
+      - POSTGRES_DB=inventory-svc-db
     ports:
       - '5411:5432'
     volumes:
