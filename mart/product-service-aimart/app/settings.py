@@ -13,3 +13,9 @@ DATABASE_URL = config("DATABASE_URL", cast=Secret)
 
 # Load the TEST_DATABASE_URL environment variable and cast it to a Secret for secure handling
 TEST_DATABASE_URL = config("TEST_DATABASE_URL", cast=Secret)
+
+KAFKA_PRODUCT_TOPIC = config("KAFKA_PRODUCT_TOPIC", cast=str)
+
+BOOTSTRAP_SERVER = config("BOOTSTRAP_SERVER", cast=str)
+
+KAFKA_CONSUMER_GROUP_ID_FOR_PRODUCT = config("KAFKA_CONSUMER_GROUP_ID_FOR_PRODUCT", cast=str)

@@ -11,7 +11,7 @@ from app.crud.crud_product import add_new_product, get_all_products, get_product
 # Async context manager for application lifespan events
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("Creating tables for product-service-aimart..")
+    print("Creating tables for product-service-aimart...")
     create_db_and_tables()  # Create database tables
     yield  # Application startup
 
