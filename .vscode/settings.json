@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./mart/product-service-aimart/app/consumers"
+    ]
+}

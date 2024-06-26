@@ -4,17 +4,17 @@ name: mobi-ai-mart
 
 services:
   # Service 01 user_service_api
-  user-svc-aimart-api:
-    build:
-      context: ./user-service-aimart
-      dockerfile: Dockerfile.dev
-    container_name: useraimart_cont
-    volumes:
-      - ./user-service-aimart:/code
-    depends_on:
-      - user-aimart-db
-    ports:
-      - "8006:8006"
+  # user-svc-aimart-api:
+  #   build:
+  #     context: ./user-service-aimart
+  #     dockerfile: Dockerfile.dev
+  #   container_name: useraimart_cont
+  #   volumes:
+  #     - ./user-service-aimart:/code
+  #   depends_on:
+  #     - user-aimart-db
+  #   ports:
+  #     - "8006:8006"
 
   # Service 02 product_service_api
   prod-svc-aimart-api:
@@ -30,43 +30,43 @@ services:
       - "8007:8007"
 
   # Service 03 payment_svc_api
-  payment-svc-api:
-    build:
-      context: ./payment-service-aimart
-      dockerfile: Dockerfile.dev
-    container_name: payment-svc-cont
-    volumes:
-      - ./payment-service-aimart:/code
-    depends_on:
-      - payment-svc-db
-    ports:
-      - "8008:8008"
+  # payment-svc-api:
+  #   build:
+  #     context: ./payment-service-aimart
+  #     dockerfile: Dockerfile.dev
+  #   container_name: payment-svc-cont
+  #   volumes:
+  #     - ./payment-service-aimart:/code
+  #   depends_on:
+  #     - payment-svc-db
+  #   ports:
+  #     - "8008:8008"
 
   # Service 04 order_service_api
-  order-svc-api:
-    build:
-      context: ./order-service-aimart
-      dockerfile: Dockerfile.dev
-    container_name: order-svc-cont
-    volumes:
-      - ./order-service-aimart:/code
-    depends_on:
-      - order-svc-db
-    ports:
-      - "8009:8009"
+  # order-svc-api:
+  #   build:
+  #     context: ./order-service-aimart
+  #     dockerfile: Dockerfile.dev
+  #   container_name: order-svc-cont
+  #   volumes:
+  #     - ./order-service-aimart:/code
+  #   depends_on:
+  #     - order-svc-db
+  #   ports:
+  #     - "8009:8009"
 
   # Service 05 notification_service_api
-  notification-svc-api:
-    build:
-      context: ./notification-service-aimart
-      dockerfile: Dockerfile.dev
-    container_name: notification-svc-cont
-    volumes:
-      - ./notification-service-aimart:/code
-    depends_on:
-      - notification-svc-db
-    ports:
-      - "8010:8010"
+  # notification-svc-api:
+  #   build:
+  #     context: ./notification-service-aimart
+  #     dockerfile: Dockerfile.dev
+  #   container_name: notification-svc-cont
+  #   volumes:
+  #     - ./notification-service-aimart:/code
+  #   depends_on:
+  #     - notification-svc-db
+  #   ports:
+  #     - "8010:8010"
 
   # Service 06 inventory_service_api
   inventory-svc-api:
@@ -83,18 +83,18 @@ services:
 
   ######################################## Database services ###################################
   # Service 07 db for user_service
-  user-aimart-db:
-    image: postgres:latest
-    restart: always
-    container_name: user-aimart_db_Cont
-    environment:
-      - POSTGRES_USER=mobi
-      - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=user-aimart-db
-    ports:
-      - '5406:5432'
-    volumes:
-      - user-aimart-db:/var/lib/postgresql/data
+  # user-aimart-db:
+  #   image: postgres:latest
+  #   restart: always
+  #   container_name: user-aimart_db_Cont
+  #   environment:
+  #     - POSTGRES_USER=mobi
+  #     - POSTGRES_PASSWORD=my_password
+  #     - POSTGRES_DB=user-aimart-db
+  #   ports:
+  #     - '5406:5432'
+  #   volumes:
+  #  - user-aimart-db:/var/lib/postgresql/data
 
   # Service 08 db for product_service
   prod-svc-db:
@@ -111,46 +111,46 @@ services:
       - prod-svc-db:/var/lib/postgresql/data
 
   # Service 09 db for payment_service
-  payment-svc-db:
-    image: postgres:latest
-    restart: always
-    container_name: payment-svc-db-Cont
-    environment:
-      - POSTGRES_USER=mobi
-      - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=payment-svc-db
-    ports:
-      - '5408:5432'
-    volumes:
-      - payment-svc-db:/var/lib/postgresql/data
+  # payment-svc-db:
+  #   image: postgres:latest
+  #   restart: always
+  #   container_name: payment-svc-db-Cont
+  #   environment:
+  #     - POSTGRES_USER=mobi
+  #     - POSTGRES_PASSWORD=my_password
+  #     - POSTGRES_DB=payment-svc-db
+  #   ports:
+  #     - '5408:5432'
+  #   volumes:
+  #     - payment-svc-db:/var/lib/postgresql/data
 
   # Service 10 db for order_service
-  order-svc-db:
-    image: postgres:latest
-    restart: always
-    container_name: order-svc-db-Cont
-    environment:
-      - POSTGRES_USER=mobi
-      - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB= order-svc-db
-    ports:
-      - '5409:5432'
-    volumes:
-      - order-svc-db:/var/lib/postgresql/data
+  # order-svc-db:
+  #   image: postgres:latest
+  #   restart: always
+  #   container_name: order-svc-db-Cont
+  #   environment:
+  #     - POSTGRES_USER=mobi
+  #     - POSTGRES_PASSWORD=my_password
+  #     - POSTGRES_DB= order-svc-db
+  #   ports:
+  #     - '5409:5432'
+  #   volumes:
+  #     - order-svc-db:/var/lib/postgresql/data
 
   # Service 11 db for notification_service
-  notification-svc-db:
-    image: postgres:latest
-    restart: always
-    container_name: notification-svc-db-Cont
-    environment:
-      - POSTGRES_USER=mobi
-      - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB=notification-svc-db
-    ports:
-      - '5410:5432'
-    volumes:
-      - notification-svc-db:/var/lib/postgresql/data
+  # notification-svc-db:
+  #   image: postgres:latest
+  #   restart: always
+  #   container_name: notification-svc-db-Cont
+  #   environment:
+  #     - POSTGRES_USER=mobi
+  #     - POSTGRES_PASSWORD=my_password
+  #     - POSTGRES_DB=notification-svc-db
+  #   ports:
+  #     - '5410:5432'
+  #   volumes:
+  #     - notification-svc-db:/var/lib/postgresql/data
 
   # Service 12 db for inventory_service
   inventory-svc-db:

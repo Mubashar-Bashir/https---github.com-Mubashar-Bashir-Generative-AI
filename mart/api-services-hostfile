@@ -1,0 +1,46 @@
+!<--AI-MART-Project>!!
+
+user-svc-aimart-api: localhost:8006  --><app>--><CRUD><models><main.py><settings.py><.env> <--> user-aimart-db: 5406:5432
+prod-svc-aimart-api: localhost:8007 --><app>--><CRUD><models><main.py><settings.py><.env> <--------> prod-svc-db: 5407:5432
+payment-svc-api: localhost:8008  --><app>--><CRUD><models><main.py><settings.py><.env> <--------> payment-svc-db: 5408:5432
+order-svc-api: localhost:8009  --><app>--><CRUD><models><main.py><settings.py><.env> <--------> order-svc-db: 5409:5432
+notification-svc-api: localhost:8010  --><app>--><CRUD><models><main.py><settings.py><.env> <---> notification-svc-db: 5410:5432
+inventory-svc-api: localhost:8011  --><app>--><CRUD><models><main.py><settings.py><.env> <---> inventory-svc-db: 5411:5432
+broker: localhost:9092
+kafka-ui: localhost:8080
+powerfull CNAI Stack
+----------------------
+### CNAI Tech Stack
+
+1. **Python**
+2. **FastAPI**
+3. **Uvicorn**
+4. **PostgreSQL**
+5. **SQLModel**
+6. **Poetry**
+7. **Docker**
+8. **Docker Compose**
+9. **Microservices Architecture**
+10. **Apache Kafka**
+11. **Kubernetes (K8s)**
+12. **Helm**
+13. **GitHub Actions**
+14. **Jenkins**
+15. **Prometheus**
+16. **Grafana**
+17. **ELK Stack (Elasticsearch, Logstash, Kibana)**
+18. **OAuth2/OpenID Connect**
+19. **JWT (JSON Web Tokens)**
+20. **Swagger/OpenAPI**
+21. **Consul/Etcd**
+22. **Envoy/Istio**
+23. **NGINX/HAProxy**
+24. **MinIO/S3**
+25. **Redis**
+26. **TensorFlow/PyTorch**
+27. **Dask/Spark**
+28. **HashiCorp Vault**
+------------------------
+### CNAI Architecture ####
+
+Product 

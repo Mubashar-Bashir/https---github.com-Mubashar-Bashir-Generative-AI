@@ -10,8 +10,7 @@ import asyncio
 import json
 from app.consumers.add_stock_consumer import  consume_messages
 
-from app import settings
-from app.db_c_e_t_session import create_db_and_tables, engine, get_session, get_kafka_producer
+from app.db_c_e_t_session import create_db_and_tables, engine, get_kafka_producer, get_session
 from app.models.inventory_model import InventoryItem
 from app.CRUD.inventory_crud import add_new_inventory_item, delete_inventory_item_by_id, get_all_inventory_items, get_inventory_item_by_id 
 #from app.consumers.add_stock_consumer import consume_messages

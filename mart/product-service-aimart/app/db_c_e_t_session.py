@@ -1,5 +1,7 @@
 from app import settings
 from sqlmodel import Session, SQLModel, create_engine
+# Kafka Producer as a dependency
+
 
 
 connection_string = str(settings.DATABASE_URL).replace(
