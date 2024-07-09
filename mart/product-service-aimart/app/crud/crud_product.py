@@ -4,59 +4,53 @@ import json
 from fastapi import HTTPException
 from app.db_c_e_t_session import get_session
 from app.models.product_model import Product
+from sqlmodel import select
 from app.consumers.config import KAFKA_BROKER_URL, ADD_PRODUCT_TOPIC, UPDATE_PRODUCT_TOPIC, DELETE_PRODUCT_TOPIC
-
-async def consume_messages():
-    consumer = AIOKafkaConsumer(
-        ADD_PRODUCT_TOPIC,
-        UPDATE_PRODUCT_TOPIC,
-        DELETE_PRODUCT_TOPIC,
-        bootstrap_servers=KAFKA_BROKER_URL,
-        group_id="product-group",
-        auto_offset_reset="earliest",
-    )
-
-    await consumer.start()
-    try:
-        async for message in consumer:
-            print(f"Received message on topic {message.topic}")
-
-            product_data = json.loads(message.value.decode())
-            with next(get_session()) as session:
-                if message.topic == ADD_PRODUCT_TOPIC:
-                    add_new_product(product_data, session)
-                elif message.topic == UPDATE_PRODUCT_TOPIC:
-                    update_product(product_data, session)
-                elif message.topic == DELETE_PRODUCT_TOPIC:
-                    delete_product(product_data, session)
-    finally:
-        await consumer.stop()
-# Remove this line to avoid circular import
-# from app.crud.crud_product import add_new_product, update_product, delete_product
-
 from sqlmodel import Session
 from app.models.product_model import Product
 
 def add_new_product(session: Session, product_data: dict):
-    product = Product(**product_data)
-    session.add(product)
-    session.commit()
-    session.refresh(product)
-    return product
+    print("iam in CRUD Now Consumer Data ::+++>>>",product_data)
+    with (get_session()) as session:
+            product = Product(**product_data)
+            session.add(product)
+            session.commit()
+            session.refresh(product)
 
-def update_product(session: Session, product_id: int, product_data: dict):
+def update_product(session: Session, product_id: int, update_data):
+    print("i am in CRUD to Update >>>>---<<<<<<<<")
+    print("Product to update is>>>> ",product_id,update_data)
     product = session.get(Product, product_id)
-    if product:
+    print("I have searched to change product>>>",product)
+    product_data = update_data
+    print("ID removed from product_data to Up data>>>",product_data)
+    if product_data:
         for key, value in product_data.items():
+            print("Key =",key,"value = ",value,product_data)
             setattr(product, key, value)
         session.add(product)
         session.commit()
         session.refresh(product)
     return product
 
-def delete_product(session: Session, product_id: int):
-    product = session.get(Product, product_id)
+def delete_product_by_id(product_id: int, session: Session):
+    # print("I am in Crud to delete>>>>>>>>>>>>>>>", product_id)
+    product = get_by_id(product_id, session)
     if product:
-        session.delete(product)
-        session.commit()
-    return product
+        with session as session:
+            session.delete(product)
+            session.commit()
+            return {"message": "Product Deleted Successfully from CRUD>>>>>>>>>"}
+    return None
+    
+# get_by_id
+def get_by_id( product_id: int, session: Session):
+    print("product selected by id for get_by_id >>>>>>>>>>>>>>", product_id)
+    with session as session:  
+        product = session.get(Product, product_id)
+        return product
+
+# Get All Products from the Database
+def get_all_products(session: Session):
+    all_products = session.exec(select(Product)).all()
+    return all_products

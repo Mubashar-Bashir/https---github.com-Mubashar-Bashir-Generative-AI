@@ -21,10 +21,11 @@ services:
     build:
       context: ./product-service-aimart
       dockerfile: Dockerfile.dev
-    container_name: prod-svc-cont
+    container_name: prod-svc-APIcont
     volumes:
       - ./product-service-aimart:/code
     depends_on:
+      - broker
       - prod-svc-db
     ports:
       - "8007:8007"
@@ -71,12 +72,13 @@ services:
   # Service 06 inventory_service_api
   inventory-svc-api:
     build:
-      context: ./inventry-service-aimart
+      context: ./inventory-service-aimart
       dockerfile: Dockerfile.dev
-    container_name: inventory-svc-api-cont
+    container_name: inventory-svc-APIcont
     volumes:
-      - ./inventry-service-aimart:/code
+      - ./inventory-service-aimart:/code
     depends_on:
+      - broker
       - inventory-svc-db
     ports:
       - "8011:8011"
@@ -100,7 +102,7 @@ services:
   prod-svc-db:
     image: postgres:latest
     restart: always
-    container_name: prod-svc-Cont
+    container_name: prod-svc-DBcont
     environment:
       - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
@@ -156,7 +158,7 @@ services:
   inventory-svc-db:
     image: postgres:latest
     restart: always
-    container_name: inventory-svc-db-Cont
+    container_name: inventory-svc-DBCont
     environment:
       - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
@@ -205,24 +207,24 @@ services:
 ################################################ Volumes ###################################################
 volumes:
   # Volume 01 for user db
-  user-aimart-db:
-    driver: local
+  # user-aimart-db:
+  #   driver: local
 
   # Volume 02 for product db
   prod-svc-db:
     driver: local
 
   # Volume 03 for payment db
-  payment-svc-db:
-    driver: local
+  # payment-svc-db:
+  #   driver: local
 
   # Volume 04 for order db
-  order-svc-db:
-    driver: local
+  # order-svc-db:
+  #   driver: local
 
   # Volume 05 for notification db
-  notification-svc-db:
-    driver: local
+  # notification-svc-db:
+  #   driver: local
 
   # Volume 06 for inventory db
   inventory-svc-db:

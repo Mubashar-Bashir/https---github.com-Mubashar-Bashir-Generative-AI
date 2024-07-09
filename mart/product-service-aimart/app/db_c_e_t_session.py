@@ -1,5 +1,6 @@
 from app import settings
 from sqlmodel import Session, SQLModel, create_engine
+from contextlib import contextmanager
 # Kafka Producer as a dependency
 
 
@@ -14,9 +15,14 @@ engine = create_engine(
 )
 
 
-def create_db_and_tables():
+def create_db_and_tables() -> None:
     SQLModel.metadata.create_all(engine)
 
+@contextmanager
 def get_session():
     with Session(engine) as session:
         yield session
+# @asynccontextmanager
+# async def get_session():
+#     async with SessionLocal() as session:
+#         yield session
