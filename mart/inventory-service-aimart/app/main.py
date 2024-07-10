@@ -28,7 +28,7 @@ from app.consumers.delete_inventory_consumer import consume_delete_inventory
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for product-service-aimart.....!!")
+    print("Creating tables for product-service-aimart....!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
@@ -40,7 +40,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in Inventory DB ...!!!")
+    print("Database Tables Created in Inventory DB .....!!!")
     yield  # Application startup
         
     for task in consumer_tasks:
@@ -90,18 +90,23 @@ async def create_inventory(inventory: Inventory, session: Session = Depends(get_
 # Read all inventories
 @app.get("/manage-inventories/all", response_model=list[Inventory])
 def read_inventories(session: Session = Depends(get_session)):
-    try:
-        return get_all_inventory(session)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    with session as session:
+        try:
+            return get_all_inventory(session)
+        except Exception as e:
+            print(f"Error in read_inventories: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
 # Read a single inventory by ID            need to check and verify
 @app.get("/manage-inventories/{inventory_id}", response_model=Inventory)
-def read_inventory(inventory_id: int, session: Session = Depends(get_session)):
-    inventory = get_inventory_by_id(session=session, inventory_id=inventory_id)
-    if not inventory:
-        raise HTTPException(status_code=404, detail="Inventory not found")
-    return inventory
+async def read_inventory(inventory_id: int, session: Session = Depends(get_session)):
+    print("This is inventoy_id in main>>>>",inventory_id)
+    with session as session:
+        inventory_item = get_inventory_by_id(session=session, inventory_id=inventory_id)
+        print("After CRUD Inventory_item ",inventory_item)
+        if not inventory_item:
+            raise HTTPException(status_code=404, detail="Inventory not found")
+        return inventory_item
 
 # Update an existing inventory
 @app.put("/manage-inventories/{inventory_id}", response_model=Inventory)
@@ -113,4 +118,4 @@ async def update_inventory(inventory_id: int, inventory: InventoryUpdate, sessio
 @app.delete("/manage-inventories/{inventory_id}", response_model=dict)
 async def delete_inventory(inventory_id: int, session: Session = Depends(get_session)):
     await send_delete_inventory(inventory_id)
-    return {"message": f"Delete request for inventory ID {inventory_id} sent."}
+    #return {"message": f"Delete request for inventory ID {inventory_id} sent."}

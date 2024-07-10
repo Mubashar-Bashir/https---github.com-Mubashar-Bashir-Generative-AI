@@ -4,11 +4,11 @@ from typing import Optional  # Import Optional for type annotations
 
 class Inventory(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    product_id: int
+    product_id:     int
     stock_quantity: int
-    location: Optional[str] = None  # location of Rack or warehouse location 
+    location:       Optional[str] = None  # location of Rack or warehouse location 
 
 class InventoryUpdate(BaseModel):
-    product_id: Optional[int] = None
-    stock_quantity: Optional[int] = None
-    location: Optional[str] = None
+    product_id:     int= None
+    stock_quantity: int = None
+    location:       str = None
