@@ -44,17 +44,17 @@ services:
   #     - "8008:8008"
 
   # Service 04 order_service_api
-  # order-svc-api:
-  #   build:
-  #     context: ./order-service-aimart
-  #     dockerfile: Dockerfile.dev
-  #   container_name: order-svc-cont
-  #   volumes:
-  #     - ./order-service-aimart:/code
-  #   depends_on:
-  #     - order-svc-db
-  #   ports:
-  #     - "8009:8009"
+  order-svc-api:
+    build:
+      context: ./order-service-aimart
+      dockerfile: Dockerfile.dev
+    container_name: order-svc-cont
+    volumes:
+      - ./order-service-aimart:/code
+    depends_on:
+      - order-svc-db
+    ports:
+      - "8009:8009"
 
   # Service 05 notification_service_api
   # notification-svc-api:
@@ -127,18 +127,18 @@ services:
   #     - payment-svc-db:/var/lib/postgresql/data
 
   # Service 10 db for order_service
-  # order-svc-db:
-  #   image: postgres:latest
-  #   restart: always
-  #   container_name: order-svc-db-Cont
-  #   environment:
-  #     - POSTGRES_USER=mobi
-  #     - POSTGRES_PASSWORD=my_password
-  #     - POSTGRES_DB= order-svc-db
-  #   ports:
-  #     - '5409:5432'
-  #   volumes:
-  #     - order-svc-db:/var/lib/postgresql/data
+  order-svc-db:
+    image: postgres:latest
+    restart: always
+    container_name: order-svc-db-Cont
+    environment:
+      - POSTGRES_USER=mobi
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB= order-svc-db
+    ports:
+      - '5409:5432'
+    volumes:
+      - order-svc-db:/var/lib/postgresql/data
 
   # Service 11 db for notification_service
   # notification-svc-db:
@@ -219,8 +219,8 @@ volumes:
   #   driver: local
 
   # Volume 04 for order db
-  # order-svc-db:
-  #   driver: local
+  order-svc-db:
+    driver: local
 
   # Volume 05 for notification db
   # notification-svc-db:

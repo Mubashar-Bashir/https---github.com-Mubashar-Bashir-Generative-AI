@@ -1,4 +1,5 @@
 # app/crud/crud_inventory.py
+from typing import List
 from fastapi import HTTPException
 from sqlmodel import Session, select
 from app.models.inventory_model import Inventory
@@ -44,13 +45,15 @@ def get_inventory_by_id(inventory_id: int, session: Session) -> Inventory:
     print("I am in CRUD to get-inventroy by id >>>>>>>>>>>>>>>", inventory_id)
     # inventory = get_inventory_by_id(inventory_id, session)
     # print("inventory_id get through session = ",inventory)
-    # query = select(Inventory).where(Inventory.id == inventory_id)
-    # print("Query >>>>>",query.all())
-    # result = session.exec(query).first()
-    # print("Result >>>>> ",result.all())
-    # if result is None:
-    #     raise HTTPException(status_code=404, detail="Inventory not found")
-    # return result
+    query = select(Inventory).where(Inventory.id == inventory_id)
+    print("Query >>>>>",query)
+    result = session.exec(query).first()
+    print("Result >>>>> ",result)
+    if result is None:
+         raise HTTPException(status_code=404, detail="Inventory not found")
+    else:
+        print("i am going to return>>>> ", result)
+        return result
     ##############################
     # with session as session:``
     #     query = select(Inventory).where(Inventory.id == inventory_id)
@@ -62,11 +65,29 @@ def get_inventory_by_id(inventory_id: int, session: Session) -> Inventory:
     #     return result
 
 
-def get_all_inventory(session: Session):
+# def get_all_inventory(session: Session):
+    # try:
+    #     query = select(Inventory)
+    #     result = session.execute(query)
+    #     return result.fetchall()  # Fetch all results from the executed query
+    # except Exception as e:
+    #     print(f"Error fetching inventory: {e}")
+    #     raise
+def get_all_inventory(session: Session) -> list[Inventory]:
     try:
-        query = select(Inventory)
-        result = session.execute(query)
-        return result.fetchall()  # Fetch all results from the executed query
+        query_inventory = select(Inventory)
+        print("Inventory Query to fetch all>>>", query_inventory)
+        
+        result = session.execute(query_inventory).scalars().all()
+        print("I found the Result >>>", result)
+        
+        if result:
+            print("I am going to return result after fetching from session>>", result)
+            return result
+        else:
+            print("No Inventory Found")
+            return []
+    
     except Exception as e:
         print(f"Error fetching inventory: {e}")
-        raise
+        return []
