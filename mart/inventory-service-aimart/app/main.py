@@ -89,10 +89,11 @@ async def create_inventory(inventory: Inventory, session: Session = Depends(get_
 
 # Read all inventories
 @app.get("/manage-inventories/all", response_model=list[Inventory])
-def read_inventories(session: Session = Depends(get_session)):
+async def read_inventories(session: Session = Depends(get_session)):
     with session as session:
         try:
-            return get_all_inventory(session)
+            fetched_inventories = get_all_inventory(session)
+            return fetched_inventories
         except Exception as e:
             print(f"Error in read_inventories: {e}")
             raise HTTPException(status_code=500, detail=str(e))
@@ -106,8 +107,10 @@ async def read_inventory(inventory_id: int, session: Session = Depends(get_sessi
         print("After CRUD Inventory_item ",inventory_item)
         if not inventory_item:
             raise HTTPException(status_code=404, detail="Inventory not found")
-        return inventory_item
-
+        else:
+            print("Returning inventory item:", inventory_item.dict())
+            return inventory_item.dict()  # Explicitly convert to dict
+    
 # Update an existing inventory
 @app.put("/manage-inventories/{inventory_id}", response_model=Inventory)
 async def update_inventory(inventory_id: int, inventory: InventoryUpdate, session: Session = Depends(get_session)):
