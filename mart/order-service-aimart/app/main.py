@@ -2,7 +2,7 @@
 from typing import Annotated, List
 from fastapi import FastAPI, Depends, HTTPException, status
 from contextlib import asynccontextmanager
-from app.db_c_e_t_session import create_db_and_tables, get_session
+from app.db_c_e_t_session import get_session, create_db_and_tables
 import asyncio
 from typing import AsyncGenerator
 from sqlmodel import SQLModel, Session,  select
@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in order DB .....!!!")
+    print("Database Tables Created in order DB ....!!!")
     yield  # Application startup
         
     for task in consumer_tasks:

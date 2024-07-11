@@ -1,12 +1,12 @@
 from typing import Generator
-from app import settings
+from app import order_settings
 from sqlmodel import Session, SQLModel, create_engine
 from contextlib import contextmanager
 # Kafka Producer as a dependency
 
 
 
-connection_string = str(settings.DATABASE_URL).replace(
+connection_string = str(order_settings.DATABASE_URL).replace(
     "postgresql", "postgresql+psycopg"
 )
 
