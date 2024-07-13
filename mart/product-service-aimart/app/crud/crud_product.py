@@ -5,7 +5,6 @@ from fastapi import HTTPException
 from app.db_c_e_t_session import get_session
 from app.models.product_model import Product
 from sqlmodel import select
-from app.consumers.config import KAFKA_BROKER_URL, ADD_PRODUCT_TOPIC, UPDATE_PRODUCT_TOPIC, DELETE_PRODUCT_TOPIC
 from sqlmodel import Session
 from app.models.product_model import Product
 

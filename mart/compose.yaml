@@ -48,7 +48,7 @@ services:
     build:
       context: ./order-service-aimart
       dockerfile: Dockerfile.dev
-    container_name: order-svc-cont
+    container_name: order-svc-APIcont
     volumes:
       - ./order-service-aimart:/code
     depends_on:
@@ -134,9 +134,9 @@ services:
     environment:
       - POSTGRES_USER=mobi
       - POSTGRES_PASSWORD=my_password
-      - POSTGRES_DB= order-svc-db
+      - POSTGRES_DB=order-svc-db
     ports:
-      - '5409:5432'
+      - '5432:5432'
     volumes:
       - order-svc-db:/var/lib/postgresql/data
 
