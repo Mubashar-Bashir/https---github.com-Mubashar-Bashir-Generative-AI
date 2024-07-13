@@ -41,53 +41,14 @@ def delete_inventory_by_id(inventory_id: int, session: Session):
 
 # Define the function to get an inventory by ID using plain SQLModel queries
 def get_inventory_by_id(inventory_id: int, session: Session) -> Inventory:
-    ##############################
-    print("I am in CRUD to get-inventroy by id >>>>>>>>>>>>>>>", inventory_id)
-    # inventory = get_inventory_by_id(inventory_id, session)
-    # print("inventory_id get through session = ",inventory)
-    query = select(Inventory).where(Inventory.id == inventory_id)
-    print("Query >>>>>",query)
-    result = session.exec(query).first()
-    print("Result >>>>> ",result)
-    if result is None:
-         raise HTTPException(status_code=404, detail="Inventory not found")
-    else:
-        print("i am going to return>>>> ", result)
-        return result
-    ##############################
-    # with session as session:``
-    #     query = select(Inventory).where(Inventory.id == inventory_id)
-    #     print("Query >>>>>",query.all())
-    #     result = session.exec(query).first()
-    #     print("Result >>>>> ",result.all())
-    #     if result is None:
-    #         raise HTTPException(status_code=404, detail="Inventory not found")
-    #     return result
-
-
-# def get_all_inventory(session: Session):
-    # try:
-    #     query = select(Inventory)
-    #     result = session.execute(query)
-    #     return result.fetchall()  # Fetch all results from the executed query
-    # except Exception as e:
-    #     print(f"Error fetching inventory: {e}")
-    #     raise
-def get_all_inventory(session: Session) -> list[Inventory]:
-    try:
-        query_inventory = select(Inventory)
-        print("Inventory Query to fetch all>>>", query_inventory)
-        
-        result = session.execute(query_inventory).scalars().all()
-        print("I found the Result >>>", result)
-        
-        if result:
-            print("I am going to return result after fetching from session>>", result)
-            return result
-        else:
-            print("No Inventory Found")
-            return []
+    with session as session:
+        inventory = session.get(Inventory,inventory_id)
+        print("inventory_id get through session = ",inventory)
+        return inventory
+def get_all_inventory(session: Session):
+    with session as session:
+        query = select(Inventory)
+        all_inventories = session.exec(query).all()
+    return all_inventories
     
-    except Exception as e:
-        print(f"Error fetching inventory: {e}")
-        return []
+    

@@ -1,6 +1,8 @@
 from typing import Generator
 from app import order_settings
 from sqlmodel import Session, SQLModel, create_engine
+
+
 from contextlib import contextmanager
 # Kafka Producer as a dependency
 

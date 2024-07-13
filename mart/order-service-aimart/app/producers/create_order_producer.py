@@ -9,11 +9,7 @@ topic = KAFKA_CREATE_ORDER_TOPIC
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-async def send_create_order(order):
-    try:
-        async for producer in get_kafka_producer():
-            await producer.send(topic, value=order.encode())
-            logger.info(f"Sent order data to Kafka topic '{topic}': {order}")
-            return order
-    except Exception as e:
-        logger.error(f"Error sending order data to Kafka topic '{topic}': {e}")
+async def send_create_order(order_json):
+    async for producer in get_kafka_producer():
+        await producer.send_and_wait(topic, order_json)
+        return order_json

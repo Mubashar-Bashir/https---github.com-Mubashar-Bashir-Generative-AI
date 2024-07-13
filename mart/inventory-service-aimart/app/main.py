@@ -88,7 +88,7 @@ async def create_inventory(inventory: Inventory, session: Session = Depends(get_
     return inventory
 
 # Read all inventories
-@app.get("/manage-inventories/all", response_model=list[Inventory])
+@app.get("/manage-inventories/all")
 async def read_inventories(session: Session = Depends(get_session)):
     with session as session:
         try:
@@ -109,7 +109,7 @@ async def read_inventory(inventory_id: int, session: Session = Depends(get_sessi
             raise HTTPException(status_code=404, detail="Inventory not found")
         else:
             print("Returning inventory item:", inventory_item.dict())
-            return inventory_item.dict()  # Explicitly convert to dict
+            return inventory_item  # Explicitly convert to dict
     
 # Update an existing inventory
 @app.put("/manage-inventories/{inventory_id}", response_model=Inventory)

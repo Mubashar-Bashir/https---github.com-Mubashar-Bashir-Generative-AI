@@ -5,12 +5,13 @@ from contextlib import asynccontextmanager
 from app.db_c_e_t_session import get_session, create_db_and_tables
 import asyncio
 from typing import AsyncGenerator
+import json
 from sqlmodel import SQLModel, Session,  select
 # from app.consumers.add_product_consumer import consume_messages
 from app.models.order_model import Order,OrderUpdate
 # app/main.py
 from fastapi import FastAPI
-from app.crud.crud_order import get_all_orders,get_order,create_order,update_order,delete_order
+from app.crud.crud_order import get_all_orders,get_order_by_id,create_order,update_order,delete_order,count_all_orders
 #from app.consumers.producer import send_create_product, send_update_product, send_delete_product
 #Producers
 from app.producers.create_order_producer import send_create_order
@@ -26,7 +27,7 @@ from app.consumers.delete_order_consumer import consume_delete_order
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for product-service-aimart....!!")
+    print("Creating tables for product-service-aimart..!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
@@ -38,7 +39,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in order DB ....!!!")
+    print("Database Tables Created in order DB .!!!")
     yield  # Application startup
         
     for task in consumer_tasks:
@@ -72,26 +73,43 @@ app = FastAPI(
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return {"Welcome": "Welcome to the order-service-aimart API"}
-
+    order_count = count_all_orders()
+    return {"Welcome": "Welcome to the order-service-aimart API", "Total Number of Orders in DB": order_count}
 # Endpoint to manage inventories
 
 # Create a new order
 
 @app.post("/orders/", response_model=Order)
-def create_new_order(order: Order, session: Session = Depends(get_session)):
-    return create_order(session, order)
-
-@app.get("/orders/{order_id}", response_model=Order)
-def read_order(order_id: int, session: Session = Depends(get_session)):
-    order = get_order(session, order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+async def create_new_order(order: Order, session: Session = Depends(get_session)):
+    order_dict = {field: getattr(order, field) for field in order.dict()}
+    order_json = json.dumps(order_dict).encode("utf-8")
+    print("Order JSON >>>",order_json)
+    # created_order = create_order(session=session,order=order)
+    await send_create_order(order_json)
     return order
 
+@app.get("/orders/{order_id}", response_model=Order)
+async def read_order(order_id: int, session: Session = Depends(get_session)):
+    print("This is order_id in main>>>>", order_id)
+    with session as session:
+        order_item = get_order_by_id(session=session, order_id=order_id)
+        print("After CRUD order_item >>", order_item)
+        if not order_item:
+            raise HTTPException(status_code=404, detail="Order not found")
+        else:
+            print("Returning order item:", order_item.dict())
+            return order_item  # Explicitly convert to dict
+
+
 @app.get("/orders/", response_model=List[Order])
-def read_orders(session: Session = Depends(get_session)):
-    return get_all_orders(session)
+async def read_orders(session: Session = Depends(get_session)):
+    with session as session:
+        try:
+            fetched_orders = get_all_orders(session)
+            return fetched_orders
+        except Exception as e:
+            print(f"Error in read_orders: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
 
 @app.put("/orders/{order_id}", response_model=Order)
 def update_existing_order(order_id: int, order_update: OrderUpdate, session: Session = Depends(get_session)):
