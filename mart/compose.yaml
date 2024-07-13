@@ -4,17 +4,17 @@ name: mobi-ai-mart
 
 services:
   # Service 01 user_service_api
-  # user-svc-aimart-api:
-  #   build:
-  #     context: ./user-service-aimart
-  #     dockerfile: Dockerfile.dev
-  #   container_name: useraimart_cont
-  #   volumes:
-  #     - ./user-service-aimart:/code
-  #   depends_on:
-  #     - user-aimart-db
-  #   ports:
-  #     - "8006:8006"
+  user-svc-aimart-api:
+    build:
+      context: ./user-service-aimart
+      dockerfile: Dockerfile.dev
+    container_name: useraimart_cont
+    volumes:
+      - ./user-service-aimart:/code
+    depends_on:
+      - user-aimart-db
+    ports:
+      - "8006:8006"
 
   # Service 02 product_service_api
   prod-svc-aimart-api:
@@ -85,18 +85,18 @@ services:
 
   ######################################## Database services ###################################
   # Service 07 db for user_service
-  # user-aimart-db:
-  #   image: postgres:latest
-  #   restart: always
-  #   container_name: user-aimart_db_Cont
-  #   environment:
-  #     - POSTGRES_USER=mobi
-  #     - POSTGRES_PASSWORD=my_password
-  #     - POSTGRES_DB=user-aimart-db
-  #   ports:
-  #     - '5406:5432'
-  #   volumes:
-  #  - user-aimart-db:/var/lib/postgresql/data
+  user-aimart-db:
+    image: postgres:latest
+    restart: always
+    container_name: user-aimart_db_Cont
+    environment:
+      - POSTGRES_USER=mobi
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=user-aimart-db
+    ports:
+      - '5406:5432'
+    volumes:
+      - user-aimart-db:/var/lib/postgresql/data
 
   # Service 08 db for product_service
   prod-svc-db:
@@ -207,8 +207,8 @@ services:
 ################################################ Volumes ###################################################
 volumes:
   # Volume 01 for user db
-  # user-aimart-db:
-  #   driver: local
+  user-aimart-db:
+    driver: local
 
   # Volume 02 for product db
   prod-svc-db:
