@@ -1,8 +1,8 @@
 # base_consumer.py
 from aiokafka import AIOKafkaConsumer
 import json
-from app.settings import BOOTSTRAP_SERVER,KAFKA_CONSUMER_GROUP_ID_FOR_PRODUCT
-kafka_group=KAFKA_CONSUMER_GROUP_ID_FOR_PRODUCT
+from app.settings import BOOTSTRAP_SERVER,KAFKA_CONSUMER_GROUP_ID_FOR_USER
+kafka_group=KAFKA_CONSUMER_GROUP_ID_FOR_USER
 
 async def get_kafka_consumer(*topics):
     consumer = AIOKafkaConsumer(

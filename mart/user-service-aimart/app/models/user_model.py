@@ -7,6 +7,7 @@ class User(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     username: str
     email: str
+    cell:str
     full_name: Optional[str] = None
     password_hash: str
     is_active: bool = True
@@ -15,6 +16,7 @@ class User(SQLModel, table=True):
 class UserUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
+    cell: Optional[str] = None
     full_name: Optional[str] = None
     password: Optional[str] = None
     is_active: Optional[bool] = None

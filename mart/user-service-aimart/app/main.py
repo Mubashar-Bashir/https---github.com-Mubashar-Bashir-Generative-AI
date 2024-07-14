@@ -8,39 +8,39 @@ from typing import AsyncGenerator
 import json
 
 from sqlmodel import SQLModel, Session,  select
-# from app.consumers.add_product_consumer import consume_messages
+# from app.consumers.add_user_consumer import consume_messages
 from app.models.user_model import User,UserUpdate
 # app/main.py
 from fastapi import FastAPI
-from app.crud.crud_product import get_by_id,delete_product_by_id, get_all_products
-#from app.consumers.producer import send_create_product, send_update_product, send_delete_product
+from app.crud.crud_user import create_user,get_user_by_id,get_all_users,update_user,delete_user_by_id,count_all_users
+#from app.consumers.producer import send_create_user, send_update_user, send_delete_user
 #Producers
-from app.producers.create_product_producer import send_create_product
-from app.producers.update_product_producer import send_update_product
-from app.producers.delete_product_producer import send_delete_product
+from app.producers.create_user_producer import send_create_user
+from app.producers.update_user_producer import send_update_user
+from app.producers.delete_user_producer import send_delete_user
 #Consumers
-from app.consumers.create_product_consumer import consume_create_product
-from app.consumers.update_product_consumer import consume_update_product
-from app.consumers.delete_product_consumer import consume_delete_product
+from app.consumers.create_user_consumer import consume_create_user
+from app.consumers.update_user_consumer import consume_update_user
+from app.consumers.delete_user_consumer import consume_delete_user
 
 
 # Async context manager for application lifespan events
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for product-service-aimart...!!")
+    print("Creating tables for user-service-aimart....!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
     consumer_tasks = [
-        asyncio.create_task(consume_create_product()),
-        asyncio.create_task(consume_update_product()),
-        asyncio.create_task(consume_delete_product()),
+        asyncio.create_task(consume_create_user()),
+        asyncio.create_task(consume_update_user()),
+        asyncio.create_task(consume_delete_user()),
     ]
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in Product-DB ...!!!")
+    print("Database Tables Created in user-DB ..!!!")
     yield  # Application startup
         
     for task in consumer_tasks:
@@ -60,11 +60,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 # Create FastAPI app with custom lifespan and metadata
 app = FastAPI(
     lifespan=lifespan,
-    title="MART_API_Product_service",
+    title="MART_API_user_service",
     version="0.0.1",
     servers=[
         {
-            "url": "http://127.0.0.1:8007",
+            "url": "http://127.0.0.1:8006",
             "description": "Development Server"
         }
     ]
@@ -74,47 +74,49 @@ app = FastAPI(
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return {"Welcome": "welcome to my mobi product-service-aimart"}
+    user_count = count_all_users()
+    return {"Welcome": "welcome to my mobi user-service-aimart","Total Number of users Count>>":user_count}
 
-# Define your endpoint to manage products
-@app.post("/manage-products", response_model=Product)
-async def create_product(product: Product, session: Session = Depends(get_session)):
-    product_dict = {field: getattr(product, field) for field in product.dict()}
-    product_json = json.dumps(product_dict).encode("utf-8")
-    print("product_JSON_main>>>>>>:", product_json)
+# Define your endpoint to manage users
+@app.post("/manage-users", response_model=User)
+async def create_user(user: User, session: Session = Depends(get_session)):
+    user_dict = {field: getattr(user, field) for field in user.dict()}
+    user_json = json.dumps(user_dict).encode("utf-8")
+    print("user_JSON_main>>>>>>:", user_json)
     # Produce messag
-    await send_create_product(product_json)
-    return product
+    await send_create_user(user_json)
+    return user
     
 
-# # Read All Products
-@app.get("/manage-products/all", response_model = List[Product])
-def read_products(session: Annotated[Session, Depends(get_session)]):
-    #all_products =  get_all_products(session)
+# # Read All users
+@app.get("/manage-users/all", response_model = List[User])
+def read_users(session: Annotated[Session, Depends(get_session)]):
+    #all_users =  get_all_users(session)
     with session as session:
-        # all_products = session.exec(select(Product)).all()
-        all_products = get_all_products(session = session)
-        return all_products
+        # all_users = session.exec(select(user)).all()
+        all_users = get_all_users(session = session)
+        return all_users
 
 
-@app.get("/manage-products/{product_id}", response_model=Product)
-async def get_single_product(product_id: int, session: Annotated[Session, Depends(get_session)]) -> Product:
-    """ Get a single product by ID"""
-    product = get_by_id(product_id=product_id, session=session)
-    if not product:
-            raise HTTPException(status_code=404, detail="Product not found")
-    return product
+@app.get("/manage-users/{user_id}", response_model=User)
+async def get_single_user(user_id: int, session: Annotated[Session, Depends(get_session)]) -> User:
+    """ Get a single user by ID"""
+    with session as session:
+        user = get_user_by_id(user_id=user_id, session=session)
+        if not user:
+                raise HTTPException(status_code=404, detail="user not found")
+        return user
 
-# Delete a product by ID
-@app.delete("/manage-products/{product_id}", response_model=dict)
-async def delete_single_product(product_id: int, session: Annotated[Session, Depends(get_session)]):
-    """ Delete a single product by ID"""
-    #product_json = json.dumps(product_id).encode("utf-8")
+# Delete a user by ID
+@app.delete("/manage-users/{user_id}", response_model=dict)
+async def delete_single_user(user_id: int, session: Annotated[Session, Depends(get_session)]):
+    """ Delete a single user by ID"""
+    #user_json = json.dumps(user_id).encode("utf-8")
    
     try:
         
-        await send_delete_product(product_id=product_id)
-        return {"message": f"Delete request for product ID {product_id} sent."}
+        await send_delete_user(user_id=user_id)
+        return {"message": f"user ID {user_id} Deleted !!!"}
     except HTTPException as e:
         print(f"HTTP Exception: {e}")
         raise e
@@ -124,8 +126,8 @@ async def delete_single_product(product_id: int, session: Annotated[Session, Dep
 
 
     
-@app.patch("/manage-products/{product_id}", response_model=Product)
-async def update_single_product(product_id: int, product: ProductUpdate, session: Annotated[Session, Depends(get_session)]):
-    """ Update a single product by ID"""
-    await send_update_product(product_id=product_id, to_update_product_data=product)
-    return {**product.dict(), "id": product_id}
+@app.put("/manage-users/{user_id}", response_model=User)
+async def update_single_user(user_id: int, user: UserUpdate, session: Annotated[Session, Depends(get_session)]):
+    """ Update a single user by ID"""
+    await send_update_user(user_id=user_id, to_update_user_data=UserUpdate)
+    return user
