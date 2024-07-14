@@ -1,6 +1,6 @@
 from app.consumers.base_consumer import get_kafka_consumer
 from app.db_c_e_t_session import get_session
-from app.models.order_model import Order  # Import Order model if needed
+from app.models.order_model import Order, OrderUpdate  # Import Order model if needed
 import asyncio
 from app.crud.crud_order import update_order # Import appropriate CRUD function
 import json
@@ -14,10 +14,10 @@ async def consume_update_order():
             try:
                 message_data = json.loads(msg.value.decode())  # Deserialize JSON message
                 order_id = message_data.get('order_id')  # Extract order_id from message
-                update_data = message_data.get('update_data')  # Extract update_data from message
+                update_data = OrderUpdate(**message_data.get('update_data'))  # Extract update_data from message
 
                 with get_session() as session:
-                    updated_order = update_order(order_id, update_data, session=session)
+                    updated_order = update_order(session=session, order_id=order_id, order_update=update_data)
                     if updated_order:
                         print(f"Updated order with id: {order_id}")
                     else:

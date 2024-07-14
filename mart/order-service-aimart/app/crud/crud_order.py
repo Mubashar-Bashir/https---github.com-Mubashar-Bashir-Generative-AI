@@ -22,6 +22,7 @@ def get_all_orders(session: Session) -> List[Order]:
         orders = session.exec(select(Order)).all()
         return orders
 
+
 def update_order(session: Session, order_id: int, order_update: OrderUpdate) -> Optional[Order]:
     with session as session:
         order = session.get(Order, order_id)
@@ -32,12 +33,14 @@ def update_order(session: Session, order_id: int, order_update: OrderUpdate) -> 
             session.add(order)
             session.commit()
             session.refresh(order)
-            return order.dict()
-        # return None
+            return order
+        return None
+
 
 def delete_order(session: Session, order_id: int) -> bool:
-    with session as session:
+    # with session as session:
         order = session.get(Order, order_id)
+        print("i am in delete CRUD to perform deletion at {order_id} >>>>",order)
         if order:
             session.delete(order)
             session.commit()

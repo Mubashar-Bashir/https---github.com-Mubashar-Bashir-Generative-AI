@@ -11,8 +11,12 @@ async def send_update_order(order_id: int, updated_order_data: OrderUpdate):
             "order_id": order_id,
             "update_data": updated_order_data.dict()
         }
-        message = json.dumps(message_data).encode('utf-8')
+         # Convert datetime fields to string
+        if 'updated_at' in message_data['update_data'] and message_data['update_data']['updated_at']:
+            message_data['update_data']['updated_at'] = message_data['update_data']['updated_at'].isoformat()
         
+        message = json.dumps(message_data).encode('utf-8')
+        print("Producer >>> message: id and updated value>>>>>>", message)
         async for producer in get_kafka_producer():
             await producer.send_and_wait(topic, value=message)
         

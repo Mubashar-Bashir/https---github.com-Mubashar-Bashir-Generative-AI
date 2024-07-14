@@ -1,5 +1,5 @@
 
-from typing import Annotated, List
+from typing import Annotated, List, Dict
 from fastapi import FastAPI, Depends, HTTPException, status
 from contextlib import asynccontextmanager
 from app.db_c_e_t_session import get_session, create_db_and_tables
@@ -27,7 +27,7 @@ from app.consumers.delete_order_consumer import consume_delete_order
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for product-service-aimart..!!")
+    print("Creating tables for product-service-aimart...!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in order DB .!!!")
+    print("Database Tables Created in order DB ....!!!")
     yield  # Application startup
         
     for task in consumer_tasks:
@@ -112,15 +112,17 @@ async def read_orders(session: Session = Depends(get_session)):
             raise HTTPException(status_code=500, detail=str(e))
 
 @app.put("/orders/{order_id}", response_model=Order)
-def update_existing_order(order_id: int, order_update: OrderUpdate, session: Session = Depends(get_session)):
-    updated_order = update_order(session, order_id, order_update)
-    if not updated_order:
+async def update_existing_order(order_id: int, order: OrderUpdate, session: Session = Depends(get_session)):
+    print(" create Order_id JSON >>>",order_id)
+    await send_update_order(order_id,order)
+    return order
+   
+@app.delete("/orders/{order_id}", response_model=Dict[str, str])
+async def delete_existing_order(order_id: int, session: Session = Depends(get_session)):
+    # order = session.query(Order).filter(Order.id == order_id).first()
+    print("What is in order_id in delet consumer >>>",order_id)
+    if not order_id:
         raise HTTPException(status_code=404, detail="Order not found")
-    return updated_order
-
-@app.delete("/orders/{order_id}", response_model=bool)
-def delete_existing_order(order_id: int, session: Session = Depends(get_session)):
-    success = delete_order(session, order_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Order not found")
-    return success
+    
+    await send_delete_order(order_id=order_id) 
+    return {str(order_id): "deleted successfully"}

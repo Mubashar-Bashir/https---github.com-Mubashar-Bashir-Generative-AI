@@ -21,9 +21,9 @@ async def consume_delete_order():
             try:
                 order_data = json.loads(msg.value.decode())  # Deserialize JSON message
                 order_id = order_data.get('order_id')  # Extract order_id from message
-
+                print("Delete Consumer find job from kafka to delet id >>>>",order_id)
                 with get_session() as session:
-                    delete_order(order_id, session=session)
+                    delete_order(order_id=order_id, session=session)
                     logger.info(f"Deleted order with id: {order_id}")
 
             except Exception as e:
