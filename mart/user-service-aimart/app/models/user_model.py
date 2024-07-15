@@ -18,6 +18,6 @@ class UserUpdate(BaseModel):
     email: Optional[str] = None
     cell: Optional[str] = None
     full_name: Optional[str] = None
-    password: Optional[str] = None
+    password_hash: Optional[str] = None
     is_active: Optional[bool] = None
     role: Optional[str] = None

@@ -20,7 +20,7 @@ async def consume_update_user():
                 user_id = message_data.get('id')
                 print("user id =",user_id)
                # Create a UserUpdate object and then convert it to a dictionary
-                update_data = UserUpdate(**message_data.get('update_data')).dict(exclude_unset=True)
+                update_data = UserUpdate(**message_data.get('update_data'))
                 print("update_data =", update_data)
                 with get_session() as session:
                         updated_user = update_user(session=session, user_id=user_id, update_data=update_data)                    

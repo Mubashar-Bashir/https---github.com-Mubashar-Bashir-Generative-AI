@@ -129,5 +129,5 @@ async def delete_single_user(user_id: int, session: Annotated[Session, Depends(g
 @app.put("/manage-users/{user_id}", response_model=User)
 async def update_single_user(user_id: int, user: UserUpdate, session: Annotated[Session, Depends(get_session)]):
     """ Update a single user by ID"""
-    await send_update_user(user_id=user_id, to_update_user_data=UserUpdate)
+    await send_update_user(user_id=user_id, to_update_user_data = user)
     return user
