@@ -57,17 +57,17 @@ services:
       - "8009:8009"
 
   # Service 05 notification_service_api
-  # notification-svc-api:
-  #   build:
-  #     context: ./notification-service-aimart
-  #     dockerfile: Dockerfile.dev
-  #   container_name: notification-svc-cont
-  #   volumes:
-  #     - ./notification-service-aimart:/code
-  #   depends_on:
-  #     - notification-svc-db
-  #   ports:
-  #     - "8010:8010"
+  notification-svc-api:
+    build:
+      context: ./notification-service-aimart
+      dockerfile: Dockerfile.dev
+    container_name: notification-svc-cont
+    volumes:
+      - ./notification-service-aimart:/code
+    depends_on:
+      - notification-svc-db
+    ports:
+      - "8010:8010"
 
   # Service 06 inventory_service_api
   inventory-svc-api:
@@ -141,18 +141,18 @@ services:
       - order-svc-db:/var/lib/postgresql/data
 
   # Service 11 db for notification_service
-  # notification-svc-db:
-  #   image: postgres:latest
-  #   restart: always
-  #   container_name: notification-svc-db-Cont
-  #   environment:
-  #     - POSTGRES_USER=mobi
-  #     - POSTGRES_PASSWORD=my_password
-  #     - POSTGRES_DB=notification-svc-db
-  #   ports:
-  #     - '5410:5432'
-  #   volumes:
-  #     - notification-svc-db:/var/lib/postgresql/data
+  notification-svc-db:
+    image: postgres:latest
+    restart: always
+    container_name: notification-svc-db-Cont
+    environment:
+      - POSTGRES_USER=mobi
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=notification-svc-db
+    ports:
+      - '5410:5432'
+    volumes:
+      - notification-svc-db:/var/lib/postgresql/data
 
   # Service 12 db for inventory_service
   inventory-svc-db:
@@ -223,8 +223,8 @@ volumes:
     driver: local
 
   # Volume 05 for notification db
-  # notification-svc-db:
-  #   driver: local
+  notification-svc-db:
+    driver: local
 
   # Volume 06 for inventory db
   inventory-svc-db:
