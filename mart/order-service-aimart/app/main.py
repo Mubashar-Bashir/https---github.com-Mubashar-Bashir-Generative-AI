@@ -76,6 +76,11 @@ async def read_root():
     order_count = count_all_orders()
     return {"Welcome": "Welcome to the order-service-aimart API", "Total Number of Orders in DB": order_count}
 # Endpoint to manage inventories
+def datetime_converter(o):
+    if isinstance(o, datetime):
+        return o.isoformat()
+    raise TypeError(f'Object of type {o.__class__.__name__} is not JSON serializable')
+
 
 # Create a new order
 

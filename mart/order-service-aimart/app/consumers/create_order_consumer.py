@@ -16,11 +16,11 @@ async def consume_create_order():
     async for consumer in get_kafka_consumer(topic):
         async for msg in consumer:
             order_data = json.loads(msg.value.decode())
-            logger.info(f"Consumer received order data: {order_data}")
+            logger.info(f"Consumer received order data: >>>>>> {order_data}")
             try:
                 with get_session() as session:
                     create_order(session=session, order=Order(**order_data))
-                    logger.info(f"Order created successfully: {order_data}")
+                    logger.info(f"Order created successfully:>>>>>> {order_data}")
             except Exception as e:
                 logger.error(f"Error creating order: {e}")
 

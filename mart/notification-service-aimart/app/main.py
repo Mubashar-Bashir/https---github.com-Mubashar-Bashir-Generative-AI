@@ -22,13 +22,14 @@ from app.producers.delete_notification_producer import send_delete_notification
 from app.consumers.create_notification_consumer import consume_create_notification
 from app.consumers.update_notification_consumer import consume_update_notification
 from app.consumers.delete_notification_consumer import consume_delete_notification
+from app.consumers.order_event_consumer import consume_create_order
 
 
 # Async context manager for application lifespan events
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for product-service-aimart..!!")
+    print("Creating tables for product-service-aimart....!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
@@ -36,11 +37,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         asyncio.create_task(consume_create_notification()),
         asyncio.create_task(consume_update_notification()),
         asyncio.create_task(consume_delete_notification()),
+        asyncio.create_task(consume_create_order()),
     ]
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in notification DB .....!!!")
+    print("Database Tables Created in notification DB ...!!!")
     yield  # Application startup
         
     for task in consumer_tasks:

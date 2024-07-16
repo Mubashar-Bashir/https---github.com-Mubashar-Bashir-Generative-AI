@@ -52,7 +52,9 @@ services:
     volumes:
       - ./order-service-aimart:/code
     depends_on:
+      - broker
       - order-svc-db
+      - kafka-ui
     ports:
       - "8009:8009"
 
@@ -65,6 +67,7 @@ services:
     volumes:
       - ./notification-service-aimart:/code
     depends_on:
+      - broker
       - notification-svc-db
     ports:
       - "8010:8010"

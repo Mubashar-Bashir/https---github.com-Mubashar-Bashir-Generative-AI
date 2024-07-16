@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 
 class Order(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int = Field(primary_key=True)
     customer_id: int
     product_id: int
     quantity: int
@@ -13,6 +13,10 @@ class Order(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = None
 
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if isinstance(v, datetime) else v
+        }
 class OrderUpdate(BaseModel):
     customer_id: Optional[int] = None
     product_id: Optional[int] = None
@@ -20,3 +24,8 @@ class OrderUpdate(BaseModel):
     total_price: Optional[float] = None
     order_status: Optional[str] = None
     updated_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if isinstance(v, datetime) else v
+        }
