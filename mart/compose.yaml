@@ -31,17 +31,19 @@ services:
       - "8007:8007"
 
   # Service 03 payment_svc_api
-  # payment-svc-api:
-  #   build:
-  #     context: ./payment-service-aimart
-  #     dockerfile: Dockerfile.dev
-  #   container_name: payment-svc-cont
-  #   volumes:
-  #     - ./payment-service-aimart:/code
-  #   depends_on:
-  #     - payment-svc-db
-  #   ports:
-  #     - "8008:8008"
+  payment-svc-api:
+    build:
+      context: ./payment-service-aimart
+      dockerfile: Dockerfile.dev
+    container_name: payment-svc-cont
+    volumes:
+      - ./payment-service-aimart:/code
+    depends_on:
+      - payment-svc-db
+      - broker
+      - kafka-ui
+    ports:
+      - "8008:8008"
 
   # Service 04 order_service_api
   order-svc-api:
@@ -116,18 +118,18 @@ services:
       - prod-svc-db:/var/lib/postgresql/data
 
   # Service 09 db for payment_service
-  # payment-svc-db:
-  #   image: postgres:latest
-  #   restart: always
-  #   container_name: payment-svc-db-Cont
-  #   environment:
-  #     - POSTGRES_USER=mobi
-  #     - POSTGRES_PASSWORD=my_password
-  #     - POSTGRES_DB=payment-svc-db
-  #   ports:
-  #     - '5408:5432'
-  #   volumes:
-  #     - payment-svc-db:/var/lib/postgresql/data
+  payment-svc-db:
+    image: postgres:latest
+    restart: always
+    container_name: payment-svc-db-Cont
+    environment:
+      - POSTGRES_USER=mobi
+      - POSTGRES_PASSWORD=my_password
+      - POSTGRES_DB=payment-svc-db
+    ports:
+      - '5408:5432'
+    volumes:
+      - payment-svc-db:/var/lib/postgresql/data
 
   # Service 10 db for order_service
   order-svc-db:
@@ -218,8 +220,8 @@ volumes:
     driver: local
 
   # Volume 03 for payment db
-  # payment-svc-db:
-  #   driver: local
+  payment-svc-db:
+    driver: local
 
   # Volume 04 for order db
   order-svc-db:

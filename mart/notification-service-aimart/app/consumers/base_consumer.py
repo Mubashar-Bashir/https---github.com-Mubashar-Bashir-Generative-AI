@@ -34,7 +34,7 @@ topics = ["Create_ORDER_Events", "Update_ORDER_Events", "Delete_ORDER_Events"]
 async def get_kafka_order_consumer(*topics):
     consumer = AIOKafkaConsumer(
         *topics,
-        bootstrap_servers=BOOTSTRAP_SERVER,
+        bootstrap_servers="ai_mart_broker:9092",
         group_id=KAFKA_CONSUMER_GROUP_ID_FOR_ORDER,
         value_deserializer=lambda v: json.loads(v.decode('utf-8')),
         # bootstrap_servers=BOOTSTRAP_SERVER,
