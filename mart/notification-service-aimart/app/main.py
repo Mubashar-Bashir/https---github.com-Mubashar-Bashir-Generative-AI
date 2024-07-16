@@ -42,7 +42,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Create database tables
     create_db_and_tables()
-    print("Database Tables Created in notification DB ...!!!")
+    print("Database Tables Created in notification DB ....!!!")
     yield  # Application startup
         
     for task in consumer_tasks:

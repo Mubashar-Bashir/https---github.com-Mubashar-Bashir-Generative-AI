@@ -29,8 +29,8 @@ KAFKA_SEND_NOTIFICATION_TOPIC   = config("KAFKA_SEND_NOTIFICATION_TOPIC",   cast
 # kafka group and topic of order processing for notifications
 KAFKA_CONSUMER_GROUP_ID_FOR_ORDER = config("KAFKA_CONSUMER_GROUP_ID_FOR_ORDER", cast=str)
 KAFKA_CREATE_ORDER_TOPIC = config("KAFKA_CREATE_ORDER_TOPIC" , cast = str)
-# KAFKA_UPDATE_ORDER_TOPIC = config("KAFKA_UPDATE_ORDER_TOPIC" , cast = str)
-# KAFKA_DELETE_ORDER_TOPIC = config("KAFKA_DELETE_ORDER_TOPIC" , cast = str)
+KAFKA_UPDATE_ORDER_TOPIC = config("KAFKA_UPDATE_ORDER_TOPIC" , cast = str)
+KAFKA_DELETE_ORDER_TOPIC = config("KAFKA_DELETE_ORDER_TOPIC" , cast = str)
 
 #Gmail SMTP setup
 SMTP_SERVER =   config("SMTP_SERVER", cast = str)

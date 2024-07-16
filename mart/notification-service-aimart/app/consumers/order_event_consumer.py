@@ -7,7 +7,9 @@ from app.crud.crud_notification import create_notification
 from app.models.notification_model import NotificationCreate
 from app.db_c_e_t_session import get_session
 from app.gateways.gmail_gateway import send_email_gmail
-topics = ["Create_ORDER_Events", "Update_ORDER_Events", "Delete_ORDER_Events"]
+from app.notification_settings import KAFKA_CONSUMER_GROUP_ID_FOR_ORDER,KAFKA_CREATE_ORDER_TOPIC,KAFKA_DELETE_ORDER_TOPIC,KAFKA_UPDATE_ORDER_TOPIC
+
+# topics = ["Create_ORDER_Events", "Update_ORDER_Events", "Delete_ORDER_Events"]
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -16,13 +18,14 @@ logging.basicConfig(level=logging.INFO)
 #     async for consumer in get_kafka_order_consumer(*topics):
 #         async for msg in consumer:
 #             await process_message(msg)
+topics = [KAFKA_CREATE_ORDER_TOPIC, KAFKA_UPDATE_ORDER_TOPIC, KAFKA_DELETE_ORDER_TOPIC]
 async def consume_create_order():
     async for consumer in get_kafka_order_consumer(*topics):
         async for msg in consumer:
             await process_message(msg)
 async def process_message(msg):
     topic = msg.topic
-    value = json.loads(msg.value.decode('utf-8'))
+    value = msg.value
     print("Topic = >>>>>>>",topic)
     print("Value = >>>>>",value)
 
@@ -139,4 +142,9 @@ async def handle_delete_order(order_data):
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(consume_create_order())
+    consumer_tasks = [
+        asyncio.create_task(consume_create_order()),
+        # asyncio.create_task(consume_update_order()),  # Define these functions if needed
+        # asyncio.create_task(consume_delete_order())
+    ]
+    loop.run_until_complete(asyncio.wait(consumer_tasks))
