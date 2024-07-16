@@ -23,6 +23,7 @@ bcrypt = "3.2.0"
 sqlalchemy = "^2.0.30"
 pydantic = "^2.7.1"
 aiokafka = "^0.10.0"
+stripe = "^10.3.0"
 
 
 
