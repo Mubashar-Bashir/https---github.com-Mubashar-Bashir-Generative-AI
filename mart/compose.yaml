@@ -27,6 +27,7 @@ services:
     depends_on:
       - broker
       - prod-svc-db
+      - kafka-ui
     ports:
       - "8007:8007"
 
