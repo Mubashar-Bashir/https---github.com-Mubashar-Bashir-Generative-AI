@@ -27,7 +27,7 @@ from app.consumers.delete_payment_consumer import consume_delete_payment
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for payment-service-aimart...!!")
+    print("Creating tables for payment-service-aimart....!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
@@ -121,7 +121,16 @@ async def update_existing_payment(payment_id: int, payment: PaymentUpdate, sessi
     print(" create payment_id JSON >>>",payment_id)
     await send_update_payment(payment_id,payment)
     return payment
-   
+# @app.put("/payments/{payment_id}", response_model=Payment)
+# async def update_existing_payment(payment_id: int, payment_update: PaymentUpdate, session: Session = Depends(get_session)):
+#     print(" create payment_id JSON >>>", payment_id)
+#     payment = update_payment(session, payment_id, payment_update)
+#     if not payment:
+#         raise HTTPException(status_code=404, detail="Payment not found")
+    
+#     await send_update_payment(payment_id, payment_update)
+#     return payment   
+
 @app.delete("/payments/{payment_id}", response_model=dict[str, str])
 async def delete_existing_payment(payment_id: int, session: Session = Depends(get_session)):
     # payment = session.query(payment).filter(payment.id == payment_id).first()

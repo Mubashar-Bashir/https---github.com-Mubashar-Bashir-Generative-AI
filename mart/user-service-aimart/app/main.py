@@ -28,7 +28,7 @@ from app.consumers.delete_user_consumer import consume_delete_user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for user-service-aimart....!!")
+    print("Creating tables for user-service-aimart..!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())

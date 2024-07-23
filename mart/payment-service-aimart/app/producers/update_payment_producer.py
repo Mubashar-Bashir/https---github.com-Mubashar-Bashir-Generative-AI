@@ -9,7 +9,7 @@ async def send_update_payment(payment_id: int, updated_payment_data: PaymentUpda
     try:
         message_data = {
             "payment_id": payment_id,
-            "update_data": updated_payment_data.dicr()
+            "update_data": updated_payment_data.dict()
         }
          # Convert datetime fields to string
         if 'updated_at' in message_data['update_data'] and message_data['update_data']['updated_at']:

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from sqlmodel import Session, select
+from sqlmodel import SQLModel, Field, Session
 from app.models.payment_model import Payment, PaymentUpdate
 from app.db_c_e_t_session import get_session
 from sqlalchemy.sql import func  # Import func from sqlalchemy.sql
@@ -24,7 +24,7 @@ def get_all_payments(session: Session) -> List[Payment]:
 
 
 def update_payment(session: Session, payment_id: int, payment_update: PaymentUpdate) -> Optional[Payment]:
-    with session as session:
+    # with session as session:
         payment = session.get(Payment, payment_id)
         if payment:
             payment_data = payment_update.dict(exclude_unset=True)
@@ -33,7 +33,7 @@ def update_payment(session: Session, payment_id: int, payment_update: PaymentUpd
             session.add(payment)
             session.commit()
             session.refresh(payment)
-            return Payment
+            return payment
         return None
 
 

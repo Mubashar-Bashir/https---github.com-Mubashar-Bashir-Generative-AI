@@ -14,7 +14,7 @@ async def consume_update_payment():
             try:
                 message_data = json.loads(msg.value.decode())  # Deserialize JSON message
                 payment_id = message_data.get('payment_id')  # Extract payment_id from message
-                update_data = paymentUpdate(**message_data.get('update_data'))  # Extract update_data from message
+                update_data = PaymentUpdate(**message_data.get('update_data'))  # Extract update_data from message
 
                 with get_session() as session:
                     updated_payment = update_payment(session=session, payment_id=payment_id, payment_update=update_data)
