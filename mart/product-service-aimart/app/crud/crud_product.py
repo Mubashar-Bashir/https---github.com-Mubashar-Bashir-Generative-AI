@@ -7,14 +7,34 @@ from app.models.product_model import Product
 from sqlmodel import select
 from sqlmodel import Session
 from app.models.product_model import Product
+from uuid import uuid4
+from sqlalchemy.exc import IntegrityError
 
 def add_new_product(session: Session, product_data: dict):
     print("iam in CRUD Now Consumer Data ::+++>>>",product_data)
-    with (get_session()) as session:
-            product = Product(**product_data)
-            session.add(product)
-            session.commit()
-            session.refresh(product)
+    
+    try:
+         # Generate a new UUID if 'id' is not provided
+        if 'id' not in product_data:
+            product_data['id'] = str(uuid4())
+
+        with (get_session()) as session:
+                product = Product(**product_data)
+                session.add(product)
+                session.commit()
+                session.refresh(product)
+                print(f"Product with ID {product.id} created successfully.")
+                return product
+    except IntegrityError as e: 
+        # Handle specific integrity errors, such as unique constraint violations
+        session.rollback()  # Rollback the transaction
+        print(f"Error while adding new product: {e}")
+        raise HTTPException(status_code=400, detail="Product already exists or other integrity error")
+    
+    except Exception as e:
+        # Handle general exceptions
+        print(f"Error while adding new product: {e}")
+        raise
 
 def update_product(session: Session, product_id: int, update_data):
     print("i am in CRUD to Update >>>>---<<<<<<<<")

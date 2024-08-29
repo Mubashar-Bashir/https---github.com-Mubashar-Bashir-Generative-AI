@@ -9,7 +9,7 @@ import json
 
 from sqlmodel import SQLModel, Session,  select
 # from app.consumers.add_product_consumer import consume_messages
-from app.models.product_model import Product, ProductUpdate
+from app.models.product_model import Product, ProductUpdate, ProductCreate
 # app/main.py
 from fastapi import FastAPI
 from app.crud.crud_product import get_by_id,delete_product_by_id, get_all_products
@@ -77,15 +77,31 @@ async def read_root():
     return {"Welcome": "welcome to my mobi product-service-aimart"}
 
 # Define your endpoint to manage products
+# @app.post("/manage-products", response_model=Product)
+# async def create_product(product: Product, session: Session = Depends(get_session)):
+#     product_dict = {field: getattr(product, field) for field in product.dict()}
+#     product_json = json.dumps(product_dict).encode("utf-8")
+#     print("product_JSON_main>>>>>>:", product_json)
+#     # Produce messag
+#     await send_create_product(product_json)
+#     return product
+
 @app.post("/manage-products", response_model=Product)
-async def create_product(product: Product, session: Session = Depends(get_session)):
+async def create_product(product: ProductCreate, session: Session = Depends(get_session)):
+    # Create a new Product instance with a generated UUID
+    # product = Product(**product_create.dict())
+     
+    # session.add(product)
+    # session.commit()
+    # session.refresh(product)
+    
+    # return product    
     product_dict = {field: getattr(product, field) for field in product.dict()}
     product_json = json.dumps(product_dict).encode("utf-8")
     print("product_JSON_main>>>>>>:", product_json)
     # Produce messag
     await send_create_product(product_json)
     return product
-    
 
 # # Read All Products
 @app.get("/manage-products/all", response_model = List[Product])

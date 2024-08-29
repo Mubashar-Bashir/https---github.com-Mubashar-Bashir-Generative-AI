@@ -8,6 +8,9 @@ from app.crud.crud_product import add_new_product
 from app.settings import KAFKA_CREATE_PRODUCT_TOPIC
 topic=KAFKA_CREATE_PRODUCT_TOPIC
 import logging
+# import psycopg2  # or psycopg2-binary
+# import psycopg2.errors  
+
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -23,9 +26,10 @@ async def consume_create_product():
                     add_new_product(session=session, product_data=product_data)
                     logger.info(f"Product created successfully: {product_data}")
             except Exception as e:
-                logger.error(f"Error creating product: {e}")
+                print(f"Error creating product: {e}")
+                # Consider logging or additional error handling
 
-            ########################
+            ######################
             # async for msg in consumer:
             #     print("I am in adding this value in db>>>>>>>",msg.value)
             #     product_data = json.loads(msg.value.decode())
