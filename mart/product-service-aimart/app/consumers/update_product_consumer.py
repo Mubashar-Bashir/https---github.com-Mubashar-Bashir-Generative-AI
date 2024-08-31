@@ -16,15 +16,15 @@ async def consume_update_product():
         async for msg in consumer:
             message_data = json.loads(msg.value.decode())  # Get the message value (deserialized JSON)
             print("update_consumer_received Data>>>>>>", message_data)
-            product_id = message_data['id']
+            product_id = str(message_data['id'])
             update_data = message_data['update_data']
             with (get_session()) as session:
                 try:
                     updated_product = update_product(session, product_id, update_data)                    
                     if updated_product:
-                        print(f"Product with ID {product_id} updated successfully.")
+                        print(f"Product with ID {str(product_id)} updated successfully.")
                     else:
-                        print(f"Product with ID {product_id} not found.")
+                        print(f"Product with ID {str(product_id)} not found.")
                 except Exception as e:
                     session.rollback()
                     print(f"Error during update: {e}")

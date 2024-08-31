@@ -8,6 +8,7 @@ from sqlmodel import select
 from sqlmodel import Session
 from app.models.product_model import Product
 from uuid import uuid4
+import uuid
 from sqlalchemy.exc import IntegrityError
 
 def add_new_product(session: Session, product_data: dict):
@@ -36,10 +37,10 @@ def add_new_product(session: Session, product_data: dict):
         print(f"Error while adding new product: {e}")
         raise
 
-def update_product(session: Session, product_id: int, update_data):
+def update_product(session: Session, product_id: uuid.UUID, update_data):
     print("i am in CRUD to Update >>>>---<<<<<<<<")
-    print("Product to update is>>>> ",product_id,update_data)
-    product = session.get(Product, product_id)
+    print("Product to update is>>>> ",str(product_id),update_data)
+    product = session.get(Product, str(product_id))
     print("I have searched to change product>>>",product)
     product_data = update_data
     print("ID removed from product_data to Up data>>>",product_data)
@@ -52,7 +53,7 @@ def update_product(session: Session, product_id: int, update_data):
         session.refresh(product)
     return product
 
-def delete_product_by_id(product_id: int, session: Session):
+def delete_product_by_id(product_id: uuid.UUID, session: Session):
     # print("I am in Crud to delete>>>>>>>>>>>>>>>", product_id)
     product = get_by_id(product_id, session)
     if product:
@@ -63,8 +64,8 @@ def delete_product_by_id(product_id: int, session: Session):
     return None
     
 # get_by_id
-def get_by_id( product_id: int, session: Session):
-    print("product selected by id for get_by_id >>>>>>>>>>>>>>", product_id)
+def get_by_id( product_id: uuid.UUID, session: Session):
+    print("product selected by id for get_by_id >>>>>>>>>>>>>>", str(product_id))
     with session as session:  
         product = session.get(Product, product_id)
         return product

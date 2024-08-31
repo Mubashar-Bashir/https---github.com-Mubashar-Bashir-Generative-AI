@@ -3,11 +3,12 @@ from app.producers.kafka_producer import get_kafka_producer
 from app.settings import KAFKA_UPDATE_PRODUCT_TOPIC
 from app.models.product_model import ProductUpdate
 import json
+import uuid
 topic = KAFKA_UPDATE_PRODUCT_TOPIC
 
-async def send_update_product(product_id: int, to_update_product_data: ProductUpdate):
+async def send_update_product(product_id: uuid.UUID, to_update_product_data: ProductUpdate):
     message_data = {
-        "id": product_id,
+        "id": str(product_id),
         "update_data": to_update_product_data.dict()
     }
     message = json.dumps(message_data).encode('utf-8')

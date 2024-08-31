@@ -24,7 +24,7 @@ async def consume_delete_product():
             with (get_session()) as session:
                 try:
                     
-                    delete_product_by_id(int(product_data['id']), session=session)
-                    logger.info(f"Product Deleted: {product_data}")
+                    delete_product_by_id(str(product_data['id']), session=session)
+                    logger.info(f"Product Deleted Successfully !!!!...: {product_data}")
                 except Exception as e:
                     logger.error(f"Error while deleting product: {e}")

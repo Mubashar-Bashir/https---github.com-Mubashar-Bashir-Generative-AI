@@ -6,6 +6,7 @@ from app.db_c_e_t_session import create_db_and_tables, get_session
 import asyncio
 from typing import AsyncGenerator
 import json
+import uuid
 
 from sqlmodel import SQLModel, Session,  select
 # from app.consumers.add_product_consumer import consume_messages
@@ -114,7 +115,7 @@ def read_products(session: Annotated[Session, Depends(get_session)]):
 
 
 @app.get("/manage-products/{product_id}", response_model=Product)
-async def get_single_product(product_id: int, session: Annotated[Session, Depends(get_session)]) -> Product:
+async def get_single_product(product_id: uuid.UUID, session: Annotated[Session, Depends(get_session)]) -> Product:
     """ Get a single product by ID"""
     product = get_by_id(product_id=product_id, session=session)
     if not product:
@@ -123,14 +124,14 @@ async def get_single_product(product_id: int, session: Annotated[Session, Depend
 
 # Delete a product by ID
 @app.delete("/manage-products/{product_id}", response_model=dict)
-async def delete_single_product(product_id: int, session: Annotated[Session, Depends(get_session)]):
+async def delete_single_product(product_id: uuid.UUID, session: Annotated[Session, Depends(get_session)]):
     """ Delete a single product by ID"""
     #product_json = json.dumps(product_id).encode("utf-8")
    
     try:
         
         await send_delete_product(product_id=product_id)
-        return {"message": f"Delete request for product ID {product_id} sent."}
+        return {"message": f"Delete request for product ID {str(product_id)} sent."}
     except HTTPException as e:
         print(f"HTTP Exception: {e}")
         raise e
@@ -141,7 +142,7 @@ async def delete_single_product(product_id: int, session: Annotated[Session, Dep
 
     
 @app.patch("/manage-products/{product_id}", response_model=Product)
-async def update_single_product(product_id: int, product: ProductUpdate, session: Annotated[Session, Depends(get_session)]):
+async def update_single_product(product_id: uuid.UUID, product: ProductUpdate, session: Annotated[Session, Depends(get_session)]):
     """ Update a single product by ID"""
     await send_update_product(product_id=product_id, to_update_product_data=product)
-    return {**product.dict(), "id": product_id}
+    return {**product.dict(), "id": str(product_id)}
