@@ -17,3 +17,10 @@ class ProductUpdate(BaseModel):
     price: float
     quantity: int
     category: Optional[str] = Field(default=None, index=True)
+
+class ProductAdd(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: float
+    quantity: int
+    category: Optional[str] = Field(default=None, index=True)
