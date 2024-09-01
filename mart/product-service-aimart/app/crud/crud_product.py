@@ -10,6 +10,7 @@ from app.models.product_model import Product
 from uuid import uuid4
 import uuid
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql import func  # Import func from sqlalchemy.sql
 
 def add_new_product(session: Session, product_data: dict):
     print("iam in CRUD Now Consumer Data ::+++>>>",product_data)
@@ -74,3 +75,10 @@ def get_by_id( product_id: uuid.UUID, session: Session):
 def get_all_products(session: Session):
     all_products = session.exec(select(Product)).all()
     return all_products
+
+def count_all_Products() -> int:
+    with get_session() as session:
+        # Use select to count all Product entries
+        count_query = select(func.count(Product.id))
+        result = session.exec(count_query).one()
+        return result

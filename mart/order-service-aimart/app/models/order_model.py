@@ -6,7 +6,7 @@ from typing import Optional
 class Order(SQLModel, table=True):
     id: int = Field(primary_key=True)
     customer_id: int
-    product_id: int
+    product_id: str
     quantity: int
     total_price: float
     order_status: str = Field(default="pending", max_length=50)
@@ -18,6 +18,19 @@ class Order(SQLModel, table=True):
             datetime: lambda v: v.isoformat() if isinstance(v, datetime) else v
         }
 class OrderUpdate(BaseModel):
+    customer_id: Optional[int] = None
+    product_id: Optional[int] = None
+    quantity: Optional[int] = None
+    total_price: Optional[float] = None
+    order_status: Optional[str] = None
+    updated_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if isinstance(v, datetime) else v
+        }
+
+class OrderCreate(BaseModel):
     customer_id: Optional[int] = None
     product_id: Optional[int] = None
     quantity: Optional[int] = None

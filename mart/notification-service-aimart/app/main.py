@@ -23,6 +23,7 @@ from app.consumers.create_notification_consumer import consume_create_notificati
 from app.consumers.update_notification_consumer import consume_update_notification
 from app.consumers.delete_notification_consumer import consume_delete_notification
 from app.consumers.order_event_consumer import consume_create_order
+from app.consumers.product_consumer import get_kafka_product_consumer
 
 
 # Async context manager for application lifespan events
@@ -38,6 +39,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         asyncio.create_task(consume_update_notification()),
         asyncio.create_task(consume_delete_notification()),
         asyncio.create_task(consume_create_order()),
+        asyncio.create_task(get_kafka_product_consumer()),
     ]
     
     # Create database tables

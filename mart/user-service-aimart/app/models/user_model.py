@@ -21,3 +21,12 @@ class UserUpdate(BaseModel):
     password_hash: Optional[str] = None
     is_active: Optional[bool] = None
     role: Optional[str] = None
+
+class UserCreate(BaseModel):
+    username: str 
+    email: str
+    cell: str 
+    full_name: Optional[str] = None
+    password_hash: Optional[str] = None
+    is_active: Optional[bool] = None
+    role: Optional[str] = None
