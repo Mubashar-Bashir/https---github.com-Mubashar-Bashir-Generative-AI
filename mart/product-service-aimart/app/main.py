@@ -13,7 +13,7 @@ from sqlmodel import SQLModel, Session,  select
 from app.models.product_model import Product, ProductUpdate, ProductCreate
 # app/main.py
 from fastapi import FastAPI
-from app.crud.crud_product import get_by_id,delete_product_by_id, get_all_products
+from app.crud.crud_product import get_by_id,delete_product_by_id, get_all_products, count_all_Products
 #from app.consumers.producer import send_create_product, send_update_product, send_delete_product
 #Producers
 from app.producers.create_product_producer import send_create_product
@@ -75,7 +75,8 @@ app = FastAPI(
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return {"Welcome": "welcome to my mobi product-service-aimart"}
+    product_count = count_all_Products()
+    return {"Welcome": "welcome to my mobi product-service-aimart", "Total Number of Products in DB": product_count}
 
 # Define your endpoint to manage products
 # @app.post("/manage-products", response_model=Product)
