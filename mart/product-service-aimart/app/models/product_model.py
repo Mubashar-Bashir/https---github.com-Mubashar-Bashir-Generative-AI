@@ -17,17 +17,6 @@ class ProductUpdate(BaseModel):
     name: str
     description: Optional[str] = None
     price: float
-<<<<<<< HEAD
-    quantity: int
-    category: Optional[str] = Field(default=None, index=True)
-
-class ProductAdd(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    quantity: int
-    category: Optional[str] = Field(default=None, index=True)
-=======
     category: Optional[str] = Field(default=None, index=True)
 
 
@@ -36,4 +25,3 @@ class ProductCreate(BaseModel):
     description: Optional[str] = None
     price: float
     category: Optional[str] = None
->>>>>>> ae635867373f4e19cfc96ca8dc0faa31e91f0bdd
