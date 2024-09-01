@@ -22,17 +22,19 @@ from app.producers.delete_inventory_producer import send_delete_inventory
 from app.consumers.create_inventory_consumer import consume_create_inventory
 from app.consumers.update_inventory_consumer import consume_update_inventory
 from app.consumers.delete_inventory_consumer import consume_delete_inventory
+from app.consumers.create_product_consumer import consume_create_product
 
 
 # Async context manager for application lifespan events
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    print("Creating tables for product-service-aimart....!!")
+    print("Creating Inventory for product-service-aimart....!!")
     
     # Create a task to run the Kafka consumer
     #consumer_task = asyncio.create_task(consume_messages())
     consumer_tasks = [
+        asyncio.create_task(consume_create_product()),
         asyncio.create_task(consume_create_inventory()),
         asyncio.create_task(consume_update_inventory()),
         asyncio.create_task(consume_delete_inventory()),

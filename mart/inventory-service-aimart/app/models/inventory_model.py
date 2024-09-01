@@ -11,4 +11,4 @@ class Inventory(SQLModel, table=True):
 class InventoryUpdate(BaseModel):
     product_id:     int= None
     stock_quantity: int = None
-    location:       str = None
+    location:       str = None  # location warehouse location / Rack Location / Shop Store Number

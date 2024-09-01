@@ -6,11 +6,18 @@ from app.db_c_e_t_session import create_db_and_tables, get_session
 import asyncio
 from typing import AsyncGenerator
 import json
+<<<<<<< HEAD
+from uuid import uuid4
+from sqlmodel import SQLModel, Session,  select
+# from app.consumers.add_product_consumer import consume_messages
+from app.models.product_model import Product, ProductUpdate, ProductAdd
+=======
 import uuid
 
 from sqlmodel import SQLModel, Session,  select
 # from app.consumers.add_product_consumer import consume_messages
 from app.models.product_model import Product, ProductUpdate, ProductCreate
+>>>>>>> ae635867373f4e19cfc96ca8dc0faa31e91f0bdd
 # app/main.py
 from fastapi import FastAPI
 from app.crud.crud_product import get_by_id,delete_product_by_id, get_all_products, count_all_Products
@@ -89,6 +96,9 @@ async def read_root():
 #     return product
 
 @app.post("/manage-products", response_model=Product)
+<<<<<<< HEAD
+async def create_product(product: ProductAdd, session: Session = Depends(get_session)):
+=======
 async def create_product(product: ProductCreate, session: Session = Depends(get_session)):
     # Create a new Product instance with a generated UUID
     # product = Product(**product_create.dict())
@@ -98,10 +108,18 @@ async def create_product(product: ProductCreate, session: Session = Depends(get_
     # session.refresh(product)
     
     # return product    
+>>>>>>> ae635867373f4e19cfc96ca8dc0faa31e91f0bdd
     product_dict = {field: getattr(product, field) for field in product.dict()}
+    product_id == uuid4()
+   # Convert the product to a dictionary and add the UUID as the ID
+    product_dict = product.dict()
+    product_dict['id'] = str(product_id)  # Convert UUID to string for JSON serialization
+
     product_json = json.dumps(product_dict).encode("utf-8")
     print("product_JSON_main>>>>>>:", product_json)
     # Produce messag
+    
+    
     await send_create_product(product_json)
     return product
 
