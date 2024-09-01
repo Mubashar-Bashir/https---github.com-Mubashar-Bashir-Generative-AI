@@ -6,10 +6,18 @@ from app.db_c_e_t_session import create_db_and_tables, get_session
 import asyncio
 from typing import AsyncGenerator
 import json
+<<<<<<< HEAD
 from uuid import uuid4
 from sqlmodel import SQLModel, Session,  select
 # from app.consumers.add_product_consumer import consume_messages
 from app.models.product_model import Product, ProductUpdate, ProductAdd
+=======
+import uuid
+
+from sqlmodel import SQLModel, Session,  select
+# from app.consumers.add_product_consumer import consume_messages
+from app.models.product_model import Product, ProductUpdate, ProductCreate
+>>>>>>> ae635867373f4e19cfc96ca8dc0faa31e91f0bdd
 # app/main.py
 from fastapi import FastAPI
 from app.crud.crud_product import get_by_id,delete_product_by_id, get_all_products
@@ -77,8 +85,29 @@ async def read_root():
     return {"Welcome": "welcome to my mobi product-service-aimart"}
 
 # Define your endpoint to manage products
+# @app.post("/manage-products", response_model=Product)
+# async def create_product(product: Product, session: Session = Depends(get_session)):
+#     product_dict = {field: getattr(product, field) for field in product.dict()}
+#     product_json = json.dumps(product_dict).encode("utf-8")
+#     print("product_JSON_main>>>>>>:", product_json)
+#     # Produce messag
+#     await send_create_product(product_json)
+#     return product
+
 @app.post("/manage-products", response_model=Product)
+<<<<<<< HEAD
 async def create_product(product: ProductAdd, session: Session = Depends(get_session)):
+=======
+async def create_product(product: ProductCreate, session: Session = Depends(get_session)):
+    # Create a new Product instance with a generated UUID
+    # product = Product(**product_create.dict())
+     
+    # session.add(product)
+    # session.commit()
+    # session.refresh(product)
+    
+    # return product    
+>>>>>>> ae635867373f4e19cfc96ca8dc0faa31e91f0bdd
     product_dict = {field: getattr(product, field) for field in product.dict()}
     product_id == uuid4()
    # Convert the product to a dictionary and add the UUID as the ID
@@ -92,7 +121,6 @@ async def create_product(product: ProductAdd, session: Session = Depends(get_ses
     
     await send_create_product(product_json)
     return product
-    
 
 # # Read All Products
 @app.get("/manage-products/all", response_model = List[Product])
@@ -105,7 +133,7 @@ def read_products(session: Annotated[Session, Depends(get_session)]):
 
 
 @app.get("/manage-products/{product_id}", response_model=Product)
-async def get_single_product(product_id: int, session: Annotated[Session, Depends(get_session)]) -> Product:
+async def get_single_product(product_id: uuid.UUID, session: Annotated[Session, Depends(get_session)]) -> Product:
     """ Get a single product by ID"""
     product = get_by_id(product_id=product_id, session=session)
     if not product:
@@ -114,14 +142,14 @@ async def get_single_product(product_id: int, session: Annotated[Session, Depend
 
 # Delete a product by ID
 @app.delete("/manage-products/{product_id}", response_model=dict)
-async def delete_single_product(product_id: int, session: Annotated[Session, Depends(get_session)]):
+async def delete_single_product(product_id: uuid.UUID, session: Annotated[Session, Depends(get_session)]):
     """ Delete a single product by ID"""
     #product_json = json.dumps(product_id).encode("utf-8")
    
     try:
         
         await send_delete_product(product_id=product_id)
-        return {"message": f"Delete request for product ID {product_id} sent."}
+        return {"message": f"Delete request for product ID {str(product_id)} sent."}
     except HTTPException as e:
         print(f"HTTP Exception: {e}")
         raise e
@@ -132,7 +160,7 @@ async def delete_single_product(product_id: int, session: Annotated[Session, Dep
 
     
 @app.patch("/manage-products/{product_id}", response_model=Product)
-async def update_single_product(product_id: int, product: ProductUpdate, session: Annotated[Session, Depends(get_session)]):
+async def update_single_product(product_id: uuid.UUID, product: ProductUpdate, session: Annotated[Session, Depends(get_session)]):
     """ Update a single product by ID"""
     await send_update_product(product_id=product_id, to_update_product_data=product)
-    return {**product.dict(), "id": product_id}
+    return {**product.dict(), "id": str(product_id)}
